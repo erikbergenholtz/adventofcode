@@ -25,7 +25,8 @@ main(int argc, char **argv)
     }
     printf("Task 1: %d\n",sum1);
     printf("Task 2: %d\n",sum2);
-
+    free(data);
+    return 0;
 }
 
 int
@@ -53,5 +54,6 @@ readData(int **data, char *fname)
             (*data)[i++] = c-'0';
     }
     while(c != EOF);
+    fclose(f);
     return length;
 }
