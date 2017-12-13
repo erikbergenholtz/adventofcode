@@ -3,33 +3,63 @@
 import sys
 import math
 
-N, E, S, W = (-1,0), (0,-1), (1,0), (0,1)
+N, E, S, W = (0,1), (-1,0), (0, -1), (1, 0)
 turn = {N:E, E:S, S:W, W:N}
-d = S
 
-n = int(sys.argv[1])
-w = h = math.ceil(math.sqrt(n))
+def getSquareSum(mem, x, y):
+    xs = [i for i in range(x-1,x+2) if i >=0 and i<len(mem)]
+    ys = [i for i in range(y-1,y+2) if i >=0 and i<len(mem)]
+    s = 0
+    for x2 in xs:
+        for y2 in ys:
+            s += mem[x2][y2]
+    return s
 
-mem = [ [ 0 for i in range(w) ] for i in range(h) ]
+def getNextStep(mem,x,y,d,side):
+    nX = x+turn[d][0]
+    nY = y+turn[d][1]
+    if nX in range(side) and nY in range(side) and mem[nX][nY] == 0:
+        d = turn[d]
+        x,y = nX,nY
+    else:
+        x += d[0]
+        y += d[1]
+    return x,y,d
 
-def populate(n):
-    global d
-    x = w//2
-    y = h//2
-    for i in range(1,n+1):
+def populateMemory(mem, num, side):
+    x = y = side//2
+    d = W
+    for i in range(1,num+1):
         mem[x][y] = i
-        dx,dy = turn[d]
-        if (x+dx)<len(mem) and (y+dy)<len(mem[x]) and mem[x+dx][y+dy] == 0:
-            d = turn[d]
-        dx,dy = d
-        x += dx
-        y += dy
-    return
+        x,y,d = getNextStep(mem, x, y, d,side)
+    return mem
 
-def printmem():
-    for m in mem:
-        print(m)
-    print()
-printmem()
-populate(n)
-printmem()
+def populateMemory2(mem, num, side):
+    x = y = side//2
+    d = W
+    mem[x][y] = 1
+    for i in range(1,num+1):
+        sqr = getSquareSum(mem, x, y)
+        if sqr > num:
+            return sqr
+        mem[x][y] = sqr
+        x,y,d = getNextStep(mem,x,y,d,side)
+
+def getPosition(mem, num):
+    x = [x for x in mem if num in x][0]
+    return mem.index(x), x.index(num)
+
+num = int(sys.argv[1])
+h = math.ceil(math.sqrt(num))
+if h%2 == 0:
+    h += 1
+half = h//2
+
+mem = [[0 for i in range(h)] for i in range(h)]
+mem = populateMemory(mem, num, h)
+x,y = getPosition(mem, num)
+steps = (abs(half-x)+abs(half-y))
+print(steps)
+
+mem = [[0 for i in range(h)] for i in range(h)]
+print(populateMemory2(mem, num, h))
