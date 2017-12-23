@@ -2,8 +2,6 @@
 
 import sys
 
-# Found at https://stackoverflow.com/a/32882220
-
 def getvalue(x):
     return regs[x] if x in regs.keys() else int(x)
 
