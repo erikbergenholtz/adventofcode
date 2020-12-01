@@ -1,5 +1,5 @@
 HS=ghc
-HSFLAGS=--make
+HSFLAGS=--make -fwarn-incomplete-patterns
 
 all: solution
 
