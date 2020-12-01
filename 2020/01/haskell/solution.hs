@@ -4,14 +4,14 @@ import Data.Char
 import Data.Typeable
 import Data.List
 
-solve :: [Int] -> Int
+solve :: [Int] -> (Maybe Int)
 solve xs = test xs xs (tail xs)
 
-test :: [Int] -> [Int] -> [Int] -> Int
-test [] _ _ = -1
+test :: [Int] -> [Int] -> [Int] -> (Maybe Int)
+test [] _ _ = Nothing
 test (x:xs) [] (y:ys) = test xs ys (tail ys)
 test (x:xs) (y:ys) ys'
-    | x + y == 2020 = x*y
+    | x + y == 2020 = (Just (x*y))
     | otherwise     = test (x:xs) ys ys'
 
 main :: IO()
